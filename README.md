@@ -6,7 +6,7 @@ A practical, day-by-day curriculum for deepening Kubernetes concepts through foc
 
 Goal: Understand the Kubernetes control plane, core workload objects, and basic application operation.
 
-- Day 01 — Objective: Understand cluster architecture and core components.
+- [Day 01](day-01/README.md) — Objective: Understand cluster architecture and core components.
 - Day 02 — Objective: Deep dive into Pods, lifecycle, restarts, and init containers.
 - Day 03 — Objective: Understand Deployments, ReplicaSets, DaemonSets, StatefulSets, rollouts, and rollbacks.
 - Day 04 — Objective: Explore Services, DNS, and service discovery.
