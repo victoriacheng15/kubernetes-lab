@@ -8,7 +8,7 @@ Goal: Understand the Kubernetes control plane, core workload objects, and basic 
 
 - Day 01 — Objective: Understand cluster architecture and core components.
 - Day 02 — Objective: Deep dive into Pods, lifecycle, restarts, and init containers.
-- Day 03 — Objective: Understand Deployments, ReplicaSets, rollouts, and rollbacks.
+- Day 03 — Objective: Understand Deployments, ReplicaSets, DaemonSets, StatefulSets, rollouts, and rollbacks.
 - Day 04 — Objective: Explore Services, DNS, and service discovery.
 - Day 05 — Objective: Use ConfigMaps and Secrets for application configuration.
 - Day 06 — Objective: Practice Namespaces, ResourceQuotas, and LimitRanges.
@@ -34,7 +34,7 @@ Goal: Build operational confidence with access control, health checks, batch wor
 - Day 16 — Objective: Configure liveness, readiness, and startup probes.
 - Day 17 — Objective: Run Jobs and CronJobs.
 - Day 18 — Objective: Configure Horizontal Pod Autoscaling.
-- Day 19 — Objective: Correlate logs, metrics, events, and traces.
+- Day 19 — Objective: Correlate logs, metrics, events, pod conditions, and node conditions.
 - Day 20 — Objective: Debug containers with exec and ephemeral containers.
 - Day 21 — Project 3: Deploy a secure, observable, autoscaling application.
 
@@ -44,11 +44,11 @@ Goal: Practice cluster-level administration, recovery, and troubleshooting patte
 
 - Day 22 — Objective: Understand kubeadm cluster setup and node bootstrap.
 - Day 23 — Objective: Inspect static pods, control plane manifests, and system components.
-- Day 24 — Objective: Practice certificate inspection and cluster configuration.
+- Day 24 — Objective: Practice kubeconfig, certificate inspection, and cluster configuration.
 - Day 25 — Objective: Understand cluster upgrades and Kubernetes version skew.
 - Day 26 — Objective: Practice node maintenance with cordon, drain, and eviction.
 - Day 27 — Objective: Back up and restore etcd.
-- Day 28 — Objective: Troubleshoot failed workloads, nodes, DNS, and networking.
+- Day 28 — Objective: Troubleshoot failed workloads, kubelet issues, nodes, DNS, and networking.
 - Day 29 — Project 4: Recover a broken cluster and restore application availability.
 - Day 30 — Final Capstone: Build a troubleshooting and operations lab.
 
