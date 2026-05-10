@@ -48,11 +48,11 @@ flowchart TD
 
 ## Checklist
 
-- [ ] Identify the cluster nodes and their roles.
-- [ ] Locate the system namespaces.
-- [ ] Find the core Kubernetes Pods.
-- [ ] Explain the role of the API Server, etcd, Scheduler, Controller Manager, Kubelet, kube-proxy, container runtime, and CNI.
-- [ ] Describe the request flow from workload creation to a running Pod.
+- [x] Identify the cluster nodes and their roles.
+- [x] Locate the system namespaces.
+- [x] Find the core Kubernetes Pods.
+- [x] Explain the role of the API Server, etcd, Scheduler, Controller Manager, Kubelet, kube-proxy, container runtime, and CNI.
+- [x] Describe the request flow from workload creation to a running Pod.
 
 ## Lab: Inspect Your Cluster
 
