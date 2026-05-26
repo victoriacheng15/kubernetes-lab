@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+  labels:
+    app: init-demo
+spec:
+  initContainers:
+  - name: init-delay
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Starting initialization dependency check..."; sleep 10; echo "Initialization complete!"']
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Application is running."; sleep 3600']
