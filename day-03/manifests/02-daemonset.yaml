@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-agent
+  labels:
+    app: log-agent
+spec:
+  selector:
+    matchLabels:
+      app: log-agent
+  template:
+    metadata:
+      labels:
+        app: log-agent
+    spec:
+      containers:
+      - name: agent
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do echo \"Collecting logs from host node...\"; sleep 10; done"]
+        resources:
+          limits:
+            memory: "32Mi"
+            cpu: "100m"
+          requests:
+            memory: "16Mi"
+            cpu: "50m"
