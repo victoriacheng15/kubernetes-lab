@@ -8,7 +8,7 @@ Goal: Understand the Kubernetes control plane, core workload objects, and basic 
 
 - [Day 01](day-01/README.md) — Objective: Understand cluster architecture and core components.
 - [Day 02](day-02/README.md). Objective: Deep dive into Pods, lifecycle, restarts, and init containers.
-- Day 03 — Objective: Understand Deployments, ReplicaSets, DaemonSets, StatefulSets, rollouts, and rollbacks.
+- [Day 03](day-03/README.md). Objective: Understand Deployments, ReplicaSets, DaemonSets, StatefulSets, rollouts, and rollbacks.
 - Day 04 — Objective: Explore Services, DNS, and service discovery.
 - Day 05 — Objective: Use ConfigMaps and Secrets for application configuration.
 - Day 06 — Objective: Practice Namespaces, ResourceQuotas, and LimitRanges.
