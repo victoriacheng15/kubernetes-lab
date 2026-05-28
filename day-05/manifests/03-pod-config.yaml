@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-demo-pod
+  labels:
+    app: config-demo
+spec:
+  containers:
+  - name: app-container
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do echo \"App is running in $APP_MODE mode. Connecting to $DB_HOST as $DB_USER...\"; sleep 10; done"]
+    
+    # 1. Environment Variable Injection
+    env:
+    - name: APP_MODE
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: APP_MODE
+    - name: DB_HOST
+      valueFrom:
+        configMapKeyRef:
+          name: app-config
+          key: DB_HOST
+    - name: DB_USER
+      valueFrom:
+        secretKeyRef:
+          name: app-secret
+          key: DB_USER
+    - name: DB_PASS
+      valueFrom:
+        secretKeyRef:
+          name: app-secret
+          key: DB_PASS
+          
+    # 2. Volume Mount Ingestion
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+    - name: secret-volume
+      mountPath: /etc/secrets
+      readOnly: true
+      
+  # 3. Define Volumes bound to ConfigMap and Secret
+  volumes:
+  - name: config-volume
+    configMap:
+      name: app-config
+  - name: secret-volume
+    secret:
+      secretName: app-secret

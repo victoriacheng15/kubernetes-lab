@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  labels:
+    app: config-demo
+data:
+  # Simple key-value pairs
+  APP_MODE: "production"
+  DB_HOST: "mysql-db.default.svc.cluster.local"
+  
+  # A complete configuration file as a string
+  app.properties: |
+    server.port=8080
+    feature.signup.enabled=true
+    logging.level.root=DEBUG
