@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: compliant-pod
+  namespace: dev-team
+  labels:
+    app: config-demo
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sh", "-c", "echo 'Compliant pod is running successfully!'; sleep 3600"]
+    # No resources defined. Kubernetes will inject the LimitRange defaults:
+    # requests: cpu=250m, memory=256Mi
+    # limits: cpu=500m, memory=512Mi
