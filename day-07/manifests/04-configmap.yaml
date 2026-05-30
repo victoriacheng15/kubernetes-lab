@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: phase1-project
+data:
+  REDIS_HOST: "redis-service.phase1-project.svc.cluster.local"
