@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oom-pod
+  namespace: resource-lab
+spec:
+  restartPolicy: Never
+  containers:
+  - name: memory-allocator
+    image: alpine:latest
+    command: ["sh", "-c", "echo 'Allocating memory...' && awk 'BEGIN { for (i=0; i<500000; i++) a[i] = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" }'"]
+    resources:
+      requests:
+        cpu: 50m
+        memory: 16Mi
+      limits:
+        cpu: 100m
+        memory: 32Mi
