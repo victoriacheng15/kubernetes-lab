@@ -11,7 +11,7 @@ Goal: Understand the Kubernetes control plane, core workload objects, and basic 
 - [Day 03](day-03/README.md) - Objective: Understand Deployments, ReplicaSets, DaemonSets, StatefulSets, rollouts, and rollbacks.
 - [Day 04](day-04/README.md) - Objective: Explore Services, DNS, and service discovery.
 - [Day 05](day-05/README.md) - Objective: Use ConfigMaps and Secrets for application configuration.
-- Day 06 — Objective: Practice Namespaces, ResourceQuotas, and LimitRanges.
+- [Day 06](day-06/README.md) - Objective: Practice Namespaces, ResourceQuotas, and LimitRanges.
 - Day 07 — Project 1: Deploy and troubleshoot a basic multi-pod application.
 
 ## 🌐 Phase 2: Scheduling, Networking & Storage (Days 8–14)
