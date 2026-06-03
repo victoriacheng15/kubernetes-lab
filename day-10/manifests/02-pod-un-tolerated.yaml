@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: untolerated-pod
+  namespace: tolerations-lab
+spec:
+  containers:
+  - name: web
+    image: nginx:alpine

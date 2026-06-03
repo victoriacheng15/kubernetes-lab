@@ -20,7 +20,7 @@ Goal: Understand how Kubernetes places workloads, connects services, and persist
 
 - [Day 08](day-08/README.md) - Objective: Understand resource requests, limits, and QoS classes.
 - [Day 09](day-09/README.md) - Objective: Practice scheduling with node selectors, affinity, and anti-affinity.
-- Day 10 — Objective: Use taints and tolerations for scheduling control.
+- [Day 10](day-10/README.md) - Objective: Use taints and tolerations for scheduling control.
 - Day 11 — Objective: Explore PersistentVolumes, PVCs, and StorageClasses.
 - Day 12 — Objective: Build NetworkPolicies for ingress and egress control.
 - Day 13 — Objective: Configure Ingress and HTTP routing.
