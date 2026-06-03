@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: scheduling-lab
+  labels:
+    env: training
+    lab: day-09

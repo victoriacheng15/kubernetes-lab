@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeselector-pod
+  namespace: scheduling-lab
+spec:
+  nodeSelector:
+    disktype: ssd
+  containers:
+  - name: web
+    image: nginx:alpine
