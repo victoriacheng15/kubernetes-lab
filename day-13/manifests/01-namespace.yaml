@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-lab
+  labels:
+    env: training
+    lab: day-13
