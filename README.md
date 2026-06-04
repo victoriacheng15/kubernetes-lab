@@ -23,7 +23,7 @@ Goal: Understand how Kubernetes places workloads, connects services, and persist
 - [Day 10](day-10/README.md) - Objective: Use taints and tolerations for scheduling control.
 - [Day 11](day-11/README.md) - Objective: Explore PersistentVolumes, PVCs, and StorageClasses.
 - [Day 12](day-12/README.md) - Objective: Build NetworkPolicies for ingress and egress control.
-- Day 13 — Objective: Configure Ingress and HTTP routing.
+- [Day 13](day-13/README.md) - Objective: Configure Ingress and HTTP routing.
 - Day 14 — Project 2: Build and troubleshoot a networked application with storage.
 
 ## 🔐 Phase 3: Security & Operations (Days 15–21)
