@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+  namespace: project-2
+spec:
+  rules:
+  - host: app.example.com
+    http:
+      paths:
+      - path: /guestbook
+        pathType: Prefix
+        backend:
+          service:
+            name: guestbook-frontend-svc
+            port:
+              number: 80

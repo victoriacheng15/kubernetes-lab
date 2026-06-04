@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guestbook-frontend
+  namespace: project-2
+  labels:
+    app: guestbook-web
+spec:
+  containers:
+  - name: web-app
+    image: hashicorp/http-echo:latest
+    args:
+    - "-text=Guestbook Frontend running. Connected to Redis."
+    ports:
+    - containerPort: 5678
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guestbook-frontend-svc
+  namespace: project-2
+spec:
+  selector:
+    app: guestbook-web
+  ports:
+  - port: 80
+    targetPort: 5678

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-db-pod
+  namespace: project-2
+  labels:
+    app: redis-db
+spec:
+  containers:
+  - name: redis
+    image: redis:alpine
+    ports:
+    - containerPort: 6379
+      name: redis
+    volumeMounts:
+    - name: redis-store
+      mountPath: /data
+  volumes:
+  - name: redis-store
+    persistentVolumeClaim:
+      claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: project-2
+spec:
+  selector:
+    app: redis-db
+  ports:
+  - port: 6379
+    targetPort: 6379
