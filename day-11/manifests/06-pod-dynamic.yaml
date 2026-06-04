@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dynamic-writer-pod
+  namespace: storage-lab
+spec:
+  containers:
+  - name: alpine
+    image: alpine:latest
+    command: ["sh", "-c", "echo \"Dynamic Timestamp: $(date)\" >> /data/dynamic.txt && sleep 3600"]
+    volumeMounts:
+    - name: data-vol
+      mountPath: /data
+  volumes:
+  - name: data-vol
+    persistentVolumeClaim:
+      claimName: dynamic-claim

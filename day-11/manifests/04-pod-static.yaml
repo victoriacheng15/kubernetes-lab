@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-writer-pod
+  namespace: storage-lab
+spec:
+  containers:
+  - name: alpine
+    image: alpine:latest
+    command: ["sh", "-c", "echo \"Timestamp: $(date)\" >> /data/timestamp.txt && sleep 3600"]
+    volumeMounts:
+    - name: data-vol
+      mountPath: /data
+  volumes:
+  - name: data-vol
+    persistentVolumeClaim:
+      claimName: static-pvc
