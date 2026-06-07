@@ -52,6 +52,23 @@ Goal: Practice cluster-level administration, recovery, and troubleshooting patte
 - Day 29 — Project 4: Recover a broken cluster and restore application availability.
 - Day 30 — Final Capstone: Build a troubleshooting and operations lab.
 
+## 📚 Appendix A: The Conceptual Framework (Optional)
+
+Goal: Master the core system designs, Linux primitives, and control plane mechanics that underpin Kubernetes architecture.
+
+- Day A1 - Objective: Cluster Management: Compute Abstraction & Control Planes.
+    *   *Lab Idea:* Build a multi-node cluster from scratch using `kubeadm` and simulate control plane failures.
+- Day A2 - Objective: Networking: Packet Routing & Policy Enforcement.
+    *   *Lab Idea:* Trace IP packet routing and apply network policies inside a local containerized sandbox (such as Kind or Minikube) to avoid modifying host-level network interfaces.
+- Day A3 - Objective: Infrastructure Automation & GitOps: Declarative State & Reconciliation.
+    *   *Lab Idea:* Deploy ArgoCD or Flux to demonstrate pull-based reconciliation and drift correction.
+- Day A4 - Objective: Container Runtimes: Linux Isolation Primitives.
+    *   *Lab Idea:* Isolate a process manually using Linux namespaces and cgroups inside a disposable container or virtual machine.
+- Day A5 - Objective: Security: Least Privilege & Admission Control.
+    *   *Lab Idea:* Deploy a custom admission webhook to validate or mutate resource specifications before persistence.
+- Day A6 - Objective: Observability: Telemetry Collection & Distributed Debugging.
+    *   *Lab Idea:* Configure an OpenTelemetry Collector to unify metrics, structured logs, and tracing.
+
 ## 📚 Resources and Links
 
 - Kubernetes docs: https://kubernetes.io/docs/
