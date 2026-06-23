@@ -30,7 +30,7 @@ Goal: Understand how Kubernetes places workloads, connects services, and persist
 
 Goal: Build operational confidence with access control, health checks, batch workloads, autoscaling, and debugging.
 
-- Day 15 — Objective: Understand RBAC, ServiceAccounts, Roles, ClusterRoles, and bindings.
+- [Day 15](day-15/README.md) — Objective: Understand RBAC, ServiceAccounts, Roles, ClusterRoles, and bindings.
 - Day 16 — Objective: Configure liveness, readiness, and startup probes.
 - Day 17 — Objective: Run Jobs and CronJobs.
 - Day 18 — Objective: Configure Horizontal Pod Autoscaling.
