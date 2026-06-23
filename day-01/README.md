@@ -1,17 +1,12 @@
 # Day 01
 
-## Kubernetes Cluster Architecture
+Kubernetes is a container orchestration system that manages workloads across a cluster of machines. This lab introduces the control plane, worker nodes, and the basic request flow that keeps a cluster aligned with desired state.
 
-Kubernetes is a container orchestration system that manages workloads across a cluster of machines. A cluster is made of a control plane and one or more worker nodes.
+## Concept Overview
 
-The control plane makes decisions about the cluster. Worker nodes run the actual application workloads.
+Kubernetes cluster architecture is built around two main areas: the control plane, which makes decisions, and worker nodes, which run workloads.
 
-- Control plane: Accepts requests, stores cluster state, schedules workloads, and reconciles desired state.
-- Worker nodes: Run Pods, connect workloads to the network, and report status back to the control plane.
-- Desired state: The configuration you ask Kubernetes to maintain.
-- Reconciliation: The process Kubernetes uses to compare current state with desired state and take action.
-
-## Control Plane vs. Worker Nodes
+## Core Concepts
 
 | Area | Control Plane | Worker Node |
 | --- | --- | --- |
@@ -21,7 +16,14 @@ The control plane makes decisions about the cluster. Worker nodes run the actual
 | Runs Pods? | Usually system Pods; may run workloads depending on cluster setup | Yes |
 | Failure impact | Can affect scheduling and cluster management | Can affect workloads on that node |
 
-## Core Components
+- Control plane: Accepts requests, stores cluster state, schedules workloads, and reconciles desired state.
+- Worker nodes: Run Pods, connect workloads to the network, and report status back to the control plane.
+- Desired state: The configuration you ask Kubernetes to maintain.
+- Reconciliation: The process Kubernetes uses to compare current state with desired state and take action.
+
+### Notes
+
+- A Kubernetes node does not always mean a separate physical machine. In local clusters, multiple nodes can run on one machine as VMs or containers.
 
 - API Server: The front door to Kubernetes. All requests go through it.
 - etcd: The key-value store that holds cluster state.
@@ -32,41 +34,42 @@ The control plane makes decisions about the cluster. Worker nodes run the actual
 - Container runtime: Starts and manages containers.
 - CNI: Provides Pod networking.
 
-## Request Flow
+Kubernetes follows a control loop when a workload is created:
 
-When a workload is created, Kubernetes follows a control loop:
-
-```mermaid
-flowchart TD
-    User[User] --> APIServer[API Server]
-    APIServer --> Etcd[etcd]
-    APIServer --> Scheduler[Scheduler]
-    Scheduler --> Kubelet[Kubelet]
-    Kubelet --> Runtime[Container Runtime]
-    Runtime --> Pod[Running Pod]
+```text
+User
+  |
+  v
+API Server -> etcd
+      |
+      v
+  Scheduler
+      |
+      v
+    Kubelet -> Container Runtime -> Running Pod
 ```
 
 ## Checklist
 
-- [x] Identify the cluster nodes and their roles.
-- [x] Locate the system namespaces.
-- [x] Find the core Kubernetes Pods.
-- [x] Explain the role of the API Server, etcd, Scheduler, Controller Manager, Kubelet, kube-proxy, container runtime, and CNI.
-- [x] Describe the request flow from workload creation to a running Pod.
+- [ ] Identify the cluster nodes and their roles.
+- [ ] Locate the system namespaces.
+- [ ] Find the core Kubernetes Pods.
+- [ ] Explain the role of the API Server, etcd, Scheduler, Controller Manager, Kubelet, kube-proxy, container runtime, and CNI.
+- [ ] Describe the request flow from workload creation to a running Pod.
 
-## Lab: Inspect Your Cluster
+## Lab
 
-Use this lab to observe the cluster instead of creating new workloads. Day 01 is about understanding what already exists.
+Day 01 is about understanding what already exists, so this lab focuses on observing the cluster instead of creating new workloads.
 
 ### Steps
 
-1. List all nodes and identify control plane and worker nodes: `kubectl get nodes -o wide`
-2. Inspect all namespaces: `kubectl get namespaces`
-3. Inspect system Pods: `kubectl get pods -n kube-system -o wide`
-4. Inspect cluster info: `kubectl cluster-info`
-5. Describe one node and note its conditions: `kubectl describe node <node-name>`
-   - Note: A Kubernetes node does not always mean a separate physical machine. In local clusters, multiple nodes can run on one machine as VMs or containers.
-6. Describe one system Pod and explain what it does: `kubectl describe pod <pod-name> -n kube-system`
+- List all nodes and identify control plane and worker nodes: `kubectl get nodes -o wide`
+- Inspect all namespaces: `kubectl get namespaces`
+- Inspect system Pods: `kubectl get pods -n kube-system -o wide`
+- Inspect cluster info: `kubectl cluster-info`
+- Describe one node and note its conditions: `kubectl describe node <node-name>`
+- Describe one system Pod and explain what it does: `kubectl describe pod <pod-name> -n kube-system`
+- Clean up: no resources were created, so nothing needs to be deleted.
 
 ---
 
