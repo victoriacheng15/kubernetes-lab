@@ -1,15 +1,20 @@
 # Day 06
 
-## Namespaces, ResourceQuotas, and LimitRanges
+This day covers namespace-based governance with ResourceQuotas and LimitRanges to protect shared clusters.
+
+## Concept Overview
 
 In a shared Kubernetes cluster, multiple teams, applications, or environments (like dev, staging, prod) run on the same physical machines. Without governance, a single misconfigured container with a memory leak or a CPU loop can consume all host resources, starving other applications on the node. This is called the **noisy-neighbor problem**.
 
 Kubernetes solves this using three features to isolate and control resources:
+
 1. **Namespaces:** Logical virtual clusters inside a physical cluster that provide scope for names and authorization.
 2. **ResourceQuotas:** Namespace-level constraints that limit the *aggregate* resource consumption (e.g. total CPU, total Memory, total Pod count) across the entire namespace.
 3. **LimitRanges:** Container-level constraints that enforce *minimum, maximum, and default* resource requests and limits on individual Pods created in the namespace.
 
-## ResourceQuotas vs. LimitRanges
+## Core Concepts
+
+### ResourceQuotas vs. LimitRanges
 
 | Aspect | ResourceQuota | LimitRange |
 | --- | --- | --- |
@@ -18,27 +23,20 @@ Kubernetes solves this using three features to isolate and control resources:
 | **Typical Rules** | "This namespace cannot exceed 4 CPUs or 8Gi of RAM in total" | "Every container must have between 50m and 1 CPU, and defaults to 100m" |
 | **Rejection Timing** | Workload creation is blocked once the aggregate quota is saturated | Workload creation is blocked instantly if a single container violates boundaries |
 
-## Resource Governance in action
+### Resource Governance in action
 
 The diagram below shows how the logical Namespace wraps your workloads, while ResourceQuotas guard the boundary and LimitRanges inject default safety valves:
 
-```mermaid
-flowchart TD
-    subgraph Cluster Physical Nodes
-        subgraph Namespace: dev-team
-            RQ[ResourceQuota\nMax Namespace RAM: 4Gi]
-            LR[LimitRange\nDefault Container RAM: 256Mi]
-            
-            RQ -.->|Enforces Boundary| PodA[Pod A\nRAM Request: 512Mi]
-            LR -.->|Injects Default Limit| PodB[Pod B\nRAM Request: Unspecified -> Sets to 256Mi]
-            
-            PodA --> PodAContainer[Container]
-            PodB --> PodBContainer[Container]
-        end
-    end
+```text
+Cluster
+└─ Namespace: dev-team
+   ├─ ResourceQuota → enforces namespace boundary
+   ├─ LimitRange → sets default container limits
+   ├─ Pod A → 512Mi request
+   └─ Pod B → default 256Mi limit
 ```
 
-## Common Resource Types Recap
+### Common Resource Types Recap
 
 As you complete these core foundational steps, here is a quick, factual summary of the common Kubernetes resource types covered so far:
 
@@ -61,7 +59,7 @@ As you complete these core foundational steps, here is a quick, factual summary 
 - [ ] Deploy a compliant pod and observe how a LimitRange automatically injects default CPU/Memory requests if they are unspecified.
 - [ ] Attempt to deploy an oversized pod and observe how the API server rejects the creation request due to quota saturation.
 
-## Lab: Resource Boundaries and Multitenancy
+## Lab
 
 In this lab, you will create a isolated namespace, apply resource boundaries, and observe how Kubernetes automatically intercepts and rejects non-compliant workloads.
 
@@ -69,15 +67,20 @@ In this lab, you will create a isolated namespace, apply resource boundaries, an
 
 1. **Create the Namespace and Boundaries:**
    Apply the namespace, ResourceQuota, and LimitRange manifests:
+
    ```bash
    kubectl apply -f day-06/manifests/01-namespace.yaml
    kubectl apply -f day-06/manifests/02-resourcequota.yaml
    ```
+
    Apply the LimitRange manifest specifically to your namespace:
+
    ```bash
    kubectl apply -f day-06/manifests/03-limitrange.yaml
    ```
+
    Verify they are active in the `dev-team` namespace:
+
    ```bash
    kubectl get resourcequotas -n dev-team
    kubectl get limitranges -n dev-team
@@ -85,34 +88,44 @@ In this lab, you will create a isolated namespace, apply resource boundaries, an
 
 2. **Deploy a Compliant Pod:**
    Apply the compliant Pod manifest:
+
    ```bash
    kubectl apply -f day-06/manifests/04-pod-compliant.yaml
    ```
+
    Verify the Pod is running:
+
    ```bash
    kubectl get pods -n dev-team
    ```
 
 3. **Verify LimitRange Default Injections:**
    Inspect the compliant Pod details using YAML output:
+
    ```bash
    kubectl get pod compliant-pod -n dev-team -o yaml
    ```
+
    Scroll to `spec.containers[0].resources`. Notice that even though our manifest did not define CPU and memory requests/limits, the **LimitRange automatically injected the default values** (100m CPU and 256Mi Memory requests) at admission time!
 
 4. **Test Quota Enforcement (The Oversized Pod):**
    Attempt to apply the oversized Pod manifest (requests 4 CPU and 8Gi RAM, which exceeds the aggregate namespace quota):
+
    ```bash
    kubectl apply -f day-06/manifests/05-pod-oversized.yaml
    ```
+
    *Expected Outcome:* The API server will reject the command instantly and print an error message similar to:
+
    ```text
    Error from server (Forbidden): error when creating "day-06/manifests/05-pod-oversized.yaml": pods "oversized-pod" is forbidden: exceeded quota: dev-quota, requested: limits.cpu=4,limits.memory=8Gi, requests.cpu=4,requests.memory=8Gi, used: limits.cpu=500m,limits.memory=512Mi, requests.cpu=250m,requests.memory=256Mi, limited: limits.cpu=2,limits.memory=2Gi, requests.cpu=1,requests.memory=1Gi
    ```
+
    This proves that the ResourceQuota effectively protected your cluster from resource starvation before the workload could even be scheduled!
 
 5. **Clean Up:**
    Delete the namespace (which automatically deletes all resources, quotas, limitranges, and pods inside it):
+
    ```bash
    kubectl delete namespace dev-team
    ```

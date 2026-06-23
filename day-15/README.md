@@ -52,11 +52,13 @@ In this lab, you will create a ServiceAccount, bind it to namespace-scoped and c
 ### Steps
 
 1. **Create the Namespace:**
+
    ```bash
    kubectl apply -f day-15/manifests/01-namespace.yaml
    ```
 
 2. **Create the ServiceAccount and RBAC Rules:**
+
    ```bash
    kubectl apply -f day-15/manifests/02-serviceaccount.yaml
    kubectl apply -f day-15/manifests/03-role.yaml
@@ -66,32 +68,40 @@ In this lab, you will create a ServiceAccount, bind it to namespace-scoped and c
    ```
 
 3. **Deploy the Test Pod:**
+
    ```bash
    kubectl apply -f day-15/manifests/07-debug-pod.yaml
    kubectl get pod -n rbac-lab
    ```
 
 4. **Verify Namespace-Scoped Access:**
+
    ```bash
    kubectl auth can-i list pods --as=system:serviceaccount:rbac-lab:rbac-tester -n rbac-lab
    kubectl auth can-i get configmaps --as=system:serviceaccount:rbac-lab:rbac-tester -n rbac-lab
    kubectl auth can-i create deployments --as=system:serviceaccount:rbac-lab:rbac-tester -n rbac-lab
    ```
+
    *Expected Outcome:* The first two commands should return `yes`, and the last command should return `no`.
 
 5. **Verify Cluster-Scoped Access:**
+
    ```bash
    kubectl auth can-i list nodes --as=system:serviceaccount:rbac-lab:rbac-tester
    ```
+
    *Expected Outcome:* This should return `yes` because the ServiceAccount is bound to a ClusterRole.
 
 6. **Inspect the Pod Identity:**
+
    ```bash
    kubectl exec -n rbac-lab rbac-debugger -- cat /var/run/secrets/kubernetes.io/serviceaccount/namespace
    ```
+
    *Expected Outcome:* The Pod should report `rbac-lab`, confirming it is running with the expected ServiceAccount identity.
 
 7. **Clean Up:**
+
    ```bash
    kubectl delete clusterrolebinding node-reader-binding
    kubectl delete clusterrole node-reader

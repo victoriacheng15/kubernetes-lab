@@ -1,8 +1,11 @@
 # Day 14
 
-## Project 2: Build and Troubleshoot a Networked Stateful Application
+This project combines scheduling, networking, and storage into a multi-tier stateful application you can debug end to end.
+
+## Concept Overview
 
 Congratulations on completing **Phase 2: Scheduling, Networking, and Storage**! You have covered:
+
 * Day 08: Resource Requests, Limits, and QoS Classes
 * Day 09: Node Selectors, Affinity, and Anti-Affinity
 * Day 10: Taints and Tolerations
@@ -12,7 +15,9 @@ Congratulations on completing **Phase 2: Scheduling, Networking, and Storage**! 
 
 Today is a practical project day designed to consolidate all of these concepts into a single, secure, multi-tier stateful application.
 
-## Project Architecture
+## Core Concepts
+
+### Project Architecture
 
 You will deploy a Guestbook application consisting of a web frontend that lets users submit messages, and a Redis database that stores the entries. The system must meet these architectural specifications:
 
@@ -20,39 +25,14 @@ You will deploy a Guestbook application consisting of a web frontend that lets u
 2. **Network Security:** A `NetworkPolicy` must isolate the Redis database, allowing ingress connections **only** from the frontend Pod on port `6379`. All other traffic to the database must be blocked.
 3. **Ingress Routing:** The web frontend must be exposed externally using an `Ingress` resource on host `app.example.com` and path `/guestbook`.
 
-```mermaid
-flowchart TD
-    subgraph "Isolated Namespace: project-2"
-        subgraph "Storage & Infrastructure"
-            PV["PersistentVolume: redis-pv"]
-            PVC["PersistentVolumeClaim: redis-pvc"]
-            PVC --> PV
-        end
-
-        subgraph "Tier 1: Frontend (Stateless)"
-            WebPod["guestbook-frontend Pod"]
-            WebService["guestbook-frontend-svc Service (Port 80)"]
-            WebService --> WebPod
-        end
-
-        subgraph "Tier 2: Database (Stateful)"
-            RedisPod["redis-db-pod Pod"]
-            RedisService["redis-service Service (Port 6379)"]
-            NetPol["NetworkPolicy: redis-policy"]
-            
-            RedisPod --> PVC
-            RedisService --> RedisPod
-            NetPol -.->|Secures| RedisPod
-        end
-
-        WebPod -->|Connects to redis-service:6379| RedisService
-    end
-
-    User["External Client"] -->|Accesses /guestbook| Ingress["Ingress: web-ingress (app.example.com)"]
-    Ingress --> WebService
+```text
+Namespace: project-2
+├─ PersistentVolume ⇄ PersistentVolumeClaim
+├─ guestbook frontend Pod → Service → Ingress (app.example.com/guestbook)
+└─ Redis Pod → PVC + NetworkPolicy
 ```
 
-## Troubleshooting Guide (Common Failures)
+### Troubleshooting Guide (Common Failures)
 
 The initial manifests located in `day-14/manifests/broken/` contain three deliberate configuration errors. Use your troubleshooting skills to identify and fix:
 
@@ -68,7 +48,7 @@ The initial manifests located in `day-14/manifests/broken/` contain three delibe
    * *Possible Cause:* The Ingress resource points to a port number that the backend Service is not listening on.
    * *Solution:* Inspect Ingress routing rules with `kubectl describe ingress web-ingress -n project-2` and compare the target backend port with the port defined in the Service manifest (e.g., port `80` instead of `8080`).
 
-## Manifest Differences (Broken vs Fixed)
+### Manifest Differences (Broken vs Fixed)
 
 <details>
 <summary>Reveal Manifest Differences and Explanations</summary>
@@ -90,6 +70,7 @@ Here is a detailed comparison of the changes made between the `broken` and `fixe
 ```
 
 **Why this change is required:**
+
 * **StorageClass Mismatch:** The PV originally defined `"manual"` and the PVC requested `"standard"`. They must match exactly.
 * **Static Volume Binding:** Setting both to `""` prevents dynamic provisioning, and specifying `volumeName: redis-pv` binds them statically.
 * *Note:* Since the `storageClassName` field on a PVC is immutable, you must delete the existing PVC/namespace and recreate them to apply this change.
@@ -108,6 +89,7 @@ Here is a detailed comparison of the changes made between the `broken` and `fixe
 ```
 
 **Why this change is required:**
+
 * **Label/Selector Match:** The database NetworkPolicy (`05-networkpolicy.yaml`) specifies that ingress traffic is only allowed from pods with the label `app: frontend`.
 * Aligning the Pod labels and Service selectors to `app: frontend` authorizes the frontend container to establish connections to the Redis backend on port `6379`.
 
@@ -122,31 +104,33 @@ Here is a detailed comparison of the changes made between the `broken` and `fixe
 ```
 
 **Why this change is required:**
+
 * **Service Port Alignment:** The frontend Service exposing the application is defined with port `80`.
 * The broken Ingress rule targeted backend port `8080`, leading to a connection failure (502 Bad Gateway / 503 Service Unavailable). Setting the target port to `80` matches the service definition.
 
 </details>
 
+## Checklist
 
+* [ ] Create an isolated namespace `project-2`.
+* [ ] Configure local persistent storage via a `PersistentVolume` and a `PersistentVolumeClaim`.
+* [ ] Deploy the Redis database backend utilizing the PVC for persistence.
+* [ ] Restrict database network traffic via a `NetworkPolicy` that only accepts traffic from the frontend.
+* [ ] Deploy the web frontend application.
+* [ ] Configure an `Ingress` resource to route external traffic on `app.example.com/guestbook` to the frontend service.
+* [ ] Debug the deliberate failures in the `broken/` manifests.
+* [ ] Correct the issues in the `fixed/` manifests and verify the complete application works as designed.
 
-## Project Checklist
-
-- [ ] Create an isolated namespace `project-2`.
-- [ ] Configure local persistent storage via a `PersistentVolume` and a `PersistentVolumeClaim`.
-- [ ] Deploy the Redis database backend utilizing the PVC for persistence.
-- [ ] Restrict database network traffic via a `NetworkPolicy` that only accepts traffic from the frontend.
-- [ ] Deploy the web frontend application.
-- [ ] Configure an `Ingress` resource to route external traffic on `app.example.com/guestbook` to the frontend service.
-- [ ] Debug the deliberate failures in the `broken/` manifests.
-- [ ] Correct the issues in the `fixed/` manifests and verify the complete application works as designed.
-
-## Project Steps
+## Lab
 
 To execute the project, navigate to the `day-14` directory. You will first deploy the broken manifests to diagnose the failures, then deploy the fixed manifests.
 
-### Part 1: Deploy and Diagnose the Broken App
+### Steps
+
+#### Part 1: Deploy and Diagnose the Broken App
 
 1. **Apply the Broken Manifests:**
+
    ```bash
    kubectl apply -f day-14/manifests/broken/01-namespace.yaml
    kubectl apply -f day-14/manifests/broken/02-storage.yaml
@@ -158,24 +142,29 @@ To execute the project, navigate to the `day-14` directory. You will first deplo
 
 2. **Diagnose Storage Binding Failure:**
    Check the status of the pods:
+
    ```bash
    kubectl get pods -n project-2
    ```
+
    Identify that the database pod is `Pending`. Describe the PVC to find the binding error:
+
    ```bash
    kubectl describe pvc redis-pvc -n project-2
    ```
 
 3. **Clean Up Broken Resources:**
    Delete the resources before applying the fixed manifests:
+
    ```bash
    kubectl delete namespace project-2
    kubectl delete pv redis-pv
    ```
 
-### Part 2: Deploy and Verify the Fixed App
+#### Part 2: Deploy and Verify the Fixed App
 
 1. **Apply the Fixed Manifests:**
+
    ```bash
    kubectl apply -f day-14/manifests/fixed/01-namespace.yaml
    kubectl apply -f day-14/manifests/fixed/02-storage.yaml
@@ -187,6 +176,7 @@ To execute the project, navigate to the `day-14` directory. You will first deplo
 
 2. **Verify Storage and Pod Status:**
    Confirm that both pods are in `Running` status and the PVC is `Bound`:
+
    ```bash
    kubectl get pvc -n project-2
    kubectl get pods -n project-2
@@ -194,18 +184,21 @@ To execute the project, navigate to the `day-14` directory. You will first deplo
 
 3. **Verify Frontend to Database Connectivity:**
    Test network policy access from the frontend pod to Redis:
+
    ```bash
    kubectl exec guestbook-frontend -n project-2 -- nc -zv redis-service 6379
    ```
 
 4. **Verify Ingress Routing:**
    Simulate external client routing using a custom Host header:
+
    ```bash
    curl -H "Host: app.example.com" http://localhost/guestbook
    ```
 
 5. **Clean Up:**
    Delete the namespace to remove all project resources:
+
    ```bash
    kubectl delete namespace project-2
    kubectl delete pv redis-pv

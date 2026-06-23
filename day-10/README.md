@@ -1,8 +1,10 @@
 # Day 10
 
-## Scheduling Control: Taints and Tolerations
+This day covers taints and tolerations, which let nodes repel workloads unless pods explicitly tolerate them.
 
-While node affinity (Day 09) allows a Pod to actively *choose* which nodes it wants to schedule on, **taints and tolerations** work in the opposite direction. They allow a Node to **repel** a set of Pods. 
+## Concept Overview
+
+While node affinity (Day 09) allows a Pod to actively *choose* which nodes it wants to schedule on, **taints and tolerations** work in the opposite direction. They allow a Node to **repel** a set of Pods.
 
 A taint is applied to a node to signify that it should only accept specific workloads. A toleration is applied to a Pod to allow (but not force) it to be scheduled on a tainted node.
 
@@ -31,7 +33,9 @@ A taint is applied to a node to signify that it should only accept specific work
 
 ---
 
-## Taint Effects
+## Core Concepts
+
+### Taint Effects
 
 When you apply a taint to a node, you must define its **effect**. Kubernetes support three taint effects:
 
@@ -43,12 +47,13 @@ When you apply a taint to a node, you must define its **effect**. Kubernetes sup
 
 ---
 
-## Practical Use Cases
+### Practical Use Cases
 
 Taints and tolerations are critical for cluster administration in multi-tenant environments:
-1.  **Dedicated Nodes:** Reserving specific nodes for databases, machine learning GPU workloads, or licensed software. By tainting the nodes, you prevent standard application pods from occupying them.
-2.  **Node Drain and Maintenance:** When cordoning or draining a node for upgrades, the system automatically applies taints to repel new pods.
-3.  **Handling Node Outages:** The control plane automatically applies taints like `node.kubernetes.io/unreachable:NoExecute` or `node.kubernetes.io/not-ready:NoExecute` to bad nodes. Any pod running on them that does not tolerate these taints will be evicted and rescheduled on healthy nodes.
+
+1. **Dedicated Nodes:** Reserving specific nodes for databases, machine learning GPU workloads, or licensed software. By tainting the nodes, you prevent standard application pods from occupying them.
+2. **Node Drain and Maintenance:** When cordoning or draining a node for upgrades, the system automatically applies taints to repel new pods.
+3. **Handling Node Outages:** The control plane automatically applies taints like `node.kubernetes.io/unreachable:NoExecute` or `node.kubernetes.io/not-ready:NoExecute` to bad nodes. Any pod running on them that does not tolerate these taints will be evicted and rescheduled on healthy nodes.
 
 ---
 
@@ -61,66 +66,85 @@ Taints and tolerations are critical for cluster administration in multi-tenant e
 
 ---
 
-## Lab: Enforcing Workload Isolation via Taints
+## Lab
 
 In this lab, you will taint a local node to act as a dedicated database server, observe how it repels standard workloads, and deploy a pod with matching tolerations.
 
 ### Steps
 
-1.  **Create the Namespace:**
+1. **Create the Namespace:**
     Apply the namespace manifest:
+
     ```bash
     kubectl apply -f day-10/manifests/01-namespace.yaml
     ```
 
-2.  **Inspect and Taint your Node:**
+2. **Inspect and Taint your Node:**
     Identify a target node name:
+
     ```bash
     kubectl get nodes
     ```
+
     Apply a taint to the node. This taint specifies that the node is dedicated to databases and has a hard `NoSchedule` effect (replace `<node-name>` with your node name):
+
     ```bash
     kubectl taint nodes <node-name> dedicated=database:NoSchedule
     ```
+
     Verify the taint is active:
+
     ```bash
     kubectl describe node <node-name> | grep Taints
     ```
 
-3.  **Deploy a Pod without Tolerations:**
+3. **Deploy a Pod without Tolerations:**
     Apply the standard web server Pod manifest, which lacks any tolerations:
+
     ```bash
     kubectl apply -f day-10/manifests/02-pod-un-tolerated.yaml
     ```
+
     Check the status of the Pod:
+
     ```bash
     kubectl get pods -n tolerations-lab
     ```
+
     *Expected Outcome:* The Pod will remain in a `Pending` state.
-    
+
     Describe the Pod to verify it was repelled by the node taint:
+
     ```bash
     kubectl describe pod untolerated-pod -n tolerations-lab
     ```
+
     *Expected Event:* You should see a warning event: `FailedScheduling` with the message: `1 node(s) had untolerated taint {dedicated: database}`.
 
-4.  **Deploy a Pod with Matching Tolerations:**
+4. **Deploy a Pod with Matching Tolerations:**
     Apply the database Pod manifest, which carries a matching toleration:
+
     ```bash
     kubectl apply -f day-10/manifests/03-pod-tolerated.yaml
     ```
+
     Verify that this database Pod successfully bypasses the taint and runs:
+
     ```bash
     kubectl get pods -n tolerations-lab
     ```
+
     *Expected Outcome:* The database Pod will transition to `Running`, while the web Pod remains `Pending`.
 
-5.  **Clean Up:**
+5. **Clean Up:**
     Remove the taint from the node by suffixing the taint key and effect with a minus sign `-`:
+
     ```bash
     kubectl taint nodes <node-name> dedicated=database:NoSchedule-
     ```
+
     Verify that the untolerated web Pod now automatically schedules and starts running once the node is untainted. Then, delete the namespace:
+
     ```bash
     kubectl delete namespace tolerations-lab
     ```
