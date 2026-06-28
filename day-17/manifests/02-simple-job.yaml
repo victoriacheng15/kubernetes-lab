@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: simple-job
+  namespace: jobs-lab
+spec:
+  template:
+    spec:
+      containers:
+        - name: worker
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - "echo 'Starting batch job...'; sleep 10; echo 'Batch job completed successfully.'"
+      restartPolicy: Never
+  backoffLimit: 4

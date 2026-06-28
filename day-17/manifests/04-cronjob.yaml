@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: periodic-cronjob
+  namespace: jobs-lab
+spec:
+  schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: periodic-worker
+              image: busybox:1.36
+              command:
+                - sh
+                - -c
+                - "echo 'CronJob run at: '$(date)"
+          restartPolicy: OnFailure
