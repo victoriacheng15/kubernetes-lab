@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: parallel-job
+  namespace: jobs-lab
+spec:
+  completions: 4
+  parallelism: 2
+  template:
+    spec:
+      containers:
+        - name: worker
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - "echo 'Processing parallel chunk...'; sleep 10"
+      restartPolicy: Never
+  backoffLimit: 2
