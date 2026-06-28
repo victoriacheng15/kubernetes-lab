@@ -31,12 +31,12 @@ Goal: Understand how Kubernetes places workloads, connects services, and persist
 Goal: Build operational confidence with access control, health checks, batch workloads, autoscaling, and debugging.
 
 - [Day 15](day-15/README.md) — Objective: Understand RBAC, ServiceAccounts, Roles, ClusterRoles, and bindings.
-- Day 16 — Objective: Configure liveness, readiness, and startup probes.
-- Day 17 — Objective: Run Jobs and CronJobs.
-- Day 18 — Objective: Configure Horizontal Pod Autoscaling.
-- Day 19 — Objective: Correlate logs, metrics, events, pod conditions, and node conditions.
-- Day 20 — Objective: Debug containers with exec and ephemeral containers.
-- Day 21 — Project 3: Deploy a secure, observable, autoscaling application.
+- [Day 16](day-16/README.md) - Objective: Configure liveness, readiness, and startup probes.
+- [Day 17](day-17/README.md) - Objective: Run Jobs and CronJobs.
+- [Day 18](day-18/README.md) - Objective: Configure Horizontal Pod Autoscaling.
+- [Day 19](day-19/README.md) - Objective: Correlate logs, metrics, events, pod conditions, and node conditions.
+- [Day 20](day-20/README.md) - Objective: Debug containers with exec and ephemeral containers.
+- [Day 21](day-21/README.md) - Project 3: Deploy a secure, observable, autoscaling application.
 
 ## 🚀 Phase 4: Cluster Administration & Recovery (Days 22–30)
 
