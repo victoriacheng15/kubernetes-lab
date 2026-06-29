@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-error-pod
+  namespace: diagnostics-lab
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "echo $MY_VAR"]
+      env:
+        - name: MY_VAR
+          valueFrom:
+            configMapKeyRef:
+              name: non-existent-config
+              key: some-key
+  restartPolicy: Never
