@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oom-pod
+  namespace: diagnostics-lab
+spec:
+  containers:
+    - name: oom-container
+      image: alpine:3.18
+      command: ["sh", "-c", "echo 'Allocating memory...'; dd if=/dev/zero of=/dev/null bs=100M count=1; echo 'Done allocation'"]
+      resources:
+        limits:
+          memory: "10Mi"
+  restartPolicy: Never
