@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: config-audit
+  namespace: project-3
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: app-sa
+          containers:
+            - name: auditor
+              image: curlimages/curl:8.2.1
+              command:
+                - sh
+                - -c
+                - |
+                  echo "Auditing configmaps..."
+                  TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+                  curl -s -k -f -H "Authorization: Bearer $TOKEN" https://kubernetes.default.svc/api/v1/namespaces/project-3/configmaps
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
+          restartPolicy: OnFailure
