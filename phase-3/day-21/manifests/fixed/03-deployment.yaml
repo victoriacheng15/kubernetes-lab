@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+  namespace: project-3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    metadata:
+      labels:
+        app: secure-app
+    spec:
+      serviceAccountName: app-sa
+      containers:
+        - name: app
+          image: curlimages/curl:8.2.1
+          command:
+            - sh
+            - -c
+            - |
+              echo "Starting secure app..."
+              while true; do
+                TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+                STATUS_CODE=$(curl -s -k -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $TOKEN" https://kubernetes.default.svc/api/v1/namespaces/project-3/configmaps)
+                echo "API Check: ConfigMaps HTTP Status $STATUS_CODE"
+                if [ "$STATUS_CODE" -eq 200 ]; then
+                  touch /tmp/ready
+                else
+                  rm -f /tmp/ready
+                fi
+                sleep 10
+              done
+          startupProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/ready
+            failureThreshold: 5
+            periodSeconds: 2
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
