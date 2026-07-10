@@ -42,15 +42,15 @@ Goal: Build operational confidence with access control, health checks, batch wor
 
 Goal: Practice cluster-level administration, recovery, and troubleshooting patterns in Kubernetes.
 
-- Day 22 — Objective: Understand kubeadm cluster setup and node bootstrap.
-- Day 23 — Objective: Inspect static pods, control plane manifests, and system components.
-- Day 24 — Objective: Practice kubeconfig, certificate inspection, and cluster configuration.
-- Day 25 — Objective: Understand cluster upgrades and Kubernetes version skew.
-- Day 26 — Objective: Practice node maintenance with cordon, drain, and eviction.
-- Day 27 — Objective: Back up and restore etcd.
-- Day 28 — Objective: Troubleshoot failed workloads, kubelet issues, nodes, DNS, and networking.
-- Day 29 — Project 4: Recover a broken cluster and restore application availability.
-- Day 30 — Final Capstone: Build a troubleshooting and operations lab.
+- [Day 22](phase-4/day-22/README.md) - Objective: Understand kubeadm cluster setup and node bootstrap.
+- [Day 23](phase-4/day-23/README.md) - Objective: Inspect static pods, control plane manifests, and system components.
+- [Day 24](phase-4/day-24/README.md) - Objective: Practice kubeconfig, certificate inspection, and cluster configuration.
+- [Day 25](phase-4/day-25/README.md) - Objective: Understand cluster upgrades and Kubernetes version skew.
+- [Day 26](phase-4/day-26/README.md) - Objective: Practice node maintenance with cordon, drain, and eviction.
+- [Day 27](phase-4/day-27/README.md) - Objective: Back up and restore etcd.
+- [Day 28](phase-4/day-28/README.md) - Objective: Troubleshoot failed workloads, kubelet issues, nodes, DNS, and networking.
+- [Day 29](phase-4/day-29/README.md) - Project 4: Recover a broken cluster and restore application availability.
+- [Day 30](phase-4/day-30/README.md) - Final Capstone: Build a troubleshooting and operations lab.
 
 ## 📚 Appendix A: The Conceptual Framework (Optional)
 
