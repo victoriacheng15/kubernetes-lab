@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-web
+  namespace: capstone-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: capstone-web
+  template:
+    metadata:
+      labels:
+        app: capstone-web
+    spec:
+      serviceAccountName: frontend-sa
+      containers:
+        - name: web
+          image: curlimages/curl:8.2.1
+          command:
+            - sh
+            - -c
+            - |
+              echo "Starting web app..."
+              # Start a dummy server on port 80
+              nc -lk -p 80 -e echo -e "HTTP/1.1 200 OK\n\nHello from Capstone" &
+              
+              # Loop to query API
+              while true; do
+                TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+                STATUS_CODE=$(curl -s -k -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $TOKEN" https://kubernetes.default.svc/api/v1/namespaces/capstone-lab/pods)
+                echo "API Probe check: Pods HTTP Status $STATUS_CODE"
+                sleep 10
+              done
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
