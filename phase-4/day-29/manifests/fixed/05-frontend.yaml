@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: cluster-recovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: frontend
+  template:
+    metadata:
+      labels:
+        role: frontend
+    spec:
+      containers:
+        - name: web
+          image: curlimages/curl:8.2.1
+          command:
+            - sh
+            - -c
+            - |
+              echo "Starting web client..."
+              while true; do
+                echo "Attempting to query database..."
+                # Run NC to test port check
+                NC_OUT=$(nc -w 3 -z redis-svc 6379 2>&1)
+                if [ $? -eq 0 ]; then
+                  echo "SUCCESS: Connected to Redis database."
+                else
+                  echo "ERROR: Connection timeout connecting to Redis database."
+                fi
+                sleep 5
+              done
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi

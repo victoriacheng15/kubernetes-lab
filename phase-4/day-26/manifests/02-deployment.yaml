@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-ha
+  namespace: maintenance-lab
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-ha
+  template:
+    metadata:
+      labels:
+        app: web-ha
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25-alpine
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-web-svc
+  namespace: capstone-lab
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: capstone-web
